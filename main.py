@@ -31,10 +31,12 @@ with pulsectl.Pulse('') as pulse:
             sink = i
     
     muted = int(sink.mute)
-    percentage = round(sink.volume.value_flat * 100)
 
     if args.action == 'inc':  pulse.volume_change_all_chans(sink, +step)
     if args.action == 'dec':  pulse.volume_change_all_chans(sink, -step)
+    
+    percentage = round(sink.volume.value_flat * 100)
+
     if args.action == 'togglemute': 
         if muted == 0:
             pulse.mute(sink, mute=True)
@@ -50,8 +52,8 @@ def icon():
     if muted: return icons[len(icons) - 1]
     else:     return icons[clamped]
 
-def barStr():
-    retStr=""
+def bar():
+    retStr = str(percentage) + "%   "
 
     for i in range(0, width):
         if i < int(percentage * width / 100):
@@ -62,4 +64,4 @@ def barStr():
 
     return retStr
 
-subprocess.run('dunstify -i %s -t %s -r %s -u low "%s"' % (icon(), notifyTimeout, notifyID, barStr()), shell=True)
+subprocess.run('dunstify -i %s -t %s -r %s -u low "%s"' % (icon(), notifyTimeout, notifyID, bar()), shell=True)
