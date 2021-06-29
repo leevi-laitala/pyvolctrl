@@ -2,7 +2,7 @@
 
 Simple volume notifier written in python.
 
-
+![](resources/preview.gif)
 
 
 
