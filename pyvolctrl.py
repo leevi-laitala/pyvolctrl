@@ -31,11 +31,18 @@ with pulsectl.Pulse('') as pulse:
             sink = i
     
     muted = int(sink.mute)
-
-    if args.action == 'inc':  pulse.volume_change_all_chans(sink, +step)
-    if args.action == 'dec':  pulse.volume_change_all_chans(sink, -step)
-    
     percentage = round(sink.volume.value_flat * 100)
+
+    if args.action == 'inc':
+        dif = 100 - percentage
+        step = min(dif, step)
+        pulse.volume_change_all_chans(sink, +step)
+
+    if args.action == 'dec':
+        pulse.volume_change_all_chans(sink, -step)
+
+
+    percentage = round(sink.volume.value_flat * 100) # Update
 
     if args.action == 'togglemute': 
         if muted == 0:
@@ -64,4 +71,6 @@ def bar():
 
     return retStr
 
+
+# Get rid of subprocess
 subprocess.run('dunstify -i %s -t %s -r %s -u low "%s"' % (icon(), notifyTimeout, notifyID, bar()), shell=True)
