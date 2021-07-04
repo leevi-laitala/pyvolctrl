@@ -34,7 +34,7 @@ with pulsectl.Pulse('') as pulse:
     percentage = round(sink.volume.value_flat * 100)
 
     if args.action == 'inc':
-        dif = 100 - percentage
+        dif = (100 - percentage) / 100
         step = min(dif, step)
         pulse.volume_change_all_chans(sink, +step)
 
@@ -54,7 +54,7 @@ with pulsectl.Pulse('') as pulse:
 
 def icon():
     arrlen = len(icons) - 1 # -1 because last icon is used for mute
-    clamped = int(percentage / (100 / arrlen))
+    clamped = int(round(percentage - 1) / (100 / arrlen))
 
     if muted: return icons[len(icons) - 1]
     else:     return icons[clamped]
