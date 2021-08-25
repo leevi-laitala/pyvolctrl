@@ -46,6 +46,6 @@ Bind to keyboard volume buttons. In this example xbindkeys config file:
 Pyvolctrl requires the following python packages:
 
 - argparse
-- subprocess
+- dbus
 - pulsectl
 

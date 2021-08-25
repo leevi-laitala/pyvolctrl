@@ -1,6 +1,6 @@
 import argparse
-import subprocess
 import pulsectl
+import dbus
 
 icons     = ['volume_mute', 'volume_down', 'volume_up', 'volume_off'] # Last icon is used for mute icon
 width     = 20 
@@ -72,5 +72,10 @@ def bar():
     return retStr
 
 
-# Get rid of subprocess
-subprocess.run('dunstify -i %s -t %s -r %s -u low "%s"' % (icon(), notifyTimeout, notifyID, bar()), shell=True)
+# Notification
+item = "org.freedesktop.Notifications"
+
+notifyInterface = dbus.Interface(dbus.SessionBus().get_object(item, "/"+item.replace(".", "/")), item)
+
+#                      app name,    id,       icon,   title,  body,  actions,  hints,          timeout
+notifyInterface.Notify("pyvolctrl", notifyID, icon(), bar(),  "",    [],       {"urgency": 1}, notifyTimeout)
